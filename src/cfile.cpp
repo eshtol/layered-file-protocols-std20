@@ -8,7 +8,7 @@
 #include <memory>
 #include <type_traits>
 
-#include <fmt/format.h>
+#include <format>
 #include <stdio.h>
 
 #include <lfp/protocol.hpp>
@@ -155,8 +155,8 @@ noexcept (false) {
         return LFP_EOF;
 
     if (std::ferror(this->fp.get())) {
-        auto msg = "Unable to read from file: {}";
-        throw io_error(fmt::format(msg, std::strerror(errno)));
+        const auto msg = "Unable to read from file: {}";
+        throw io_error(std::format(msg, std::strerror(errno)));
     }
 
     return LFP_OKINCOMPLETE;

@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <algorithm>
 
-#include <fmt/format.h>
+#include <format>
 
 #include <lfp/protocol.hpp>
 #include <lfp/rp66.h>
@@ -308,7 +308,7 @@ record_index::find(std::int64_t n, iterator hint) const noexcept (false) {
     if (cur >= this->end()) {
         const auto msg = "seek: n = {} not found in index, last indexed byte {}";
         throw std::logic_error(
-                fmt::format(msg, n, this->back().offset + this->back().length));
+                std::format(msg, n, this->back().offset + this->back().length));
     }
 
     return cur;
@@ -456,7 +456,7 @@ noexcept (false) {
             else {
                 const auto msg = "rp66: unexpected EOF when reading record "
                                 "- got {} bytes, expected there to be {} more";
-                throw unexpected_eof(fmt::format(msg, n, this->current.bytes_left()));
+                throw unexpected_eof(std::format(msg, n, this->current.bytes_left()));
             }
         }
 
@@ -617,7 +617,7 @@ bool rp66::read_header_from_disk() noexcept (false) {
             else {
                 const auto msg = "rp66: unexpected EOF when reading header "
                                  "- got {} bytes";
-                throw unexpected_eof(fmt::format(msg, n));
+                throw unexpected_eof(std::format(msg, n));
             }
 
 
@@ -648,7 +648,7 @@ bool rp66::read_header_from_disk() noexcept (false) {
      */
     if (head.format != 0xFF or head.major != 1) {
         const auto msg = "rp66: Incorrect format version in Visible Record {}";
-        throw protocol_fatal( fmt::format(msg, this->index.size() + 1) );
+        throw protocol_fatal( std::format(msg, this->index.size() + 1) );
     }
 
     /*
@@ -658,7 +658,7 @@ bool rp66::read_header_from_disk() noexcept (false) {
      */
     if (head.length < 4) {
         const auto msg = "rp66: Too short record length in Visible Record {}";
-        throw protocol_fatal( fmt::format(msg, this->index.size() + 1) );
+        throw protocol_fatal( std::format(msg, this->index.size() + 1) );
     }
 
     std::int64_t offset = this->addr.zero();

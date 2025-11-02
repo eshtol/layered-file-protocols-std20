@@ -6,7 +6,7 @@
 #include <limits>
 #include <vector>
 
-#include <fmt/format.h>
+#include <format>
 
 #include <lfp/protocol.hpp>
 #include <lfp/tapeimage.h>
@@ -337,7 +337,7 @@ record_index::find(std::int64_t n, iterator hint) const noexcept (false) {
     const auto cur = std::find_if(lower, end, next_larger);
     if (cur >= this->end()) {
         const auto msg = "seek: n = {} not found in index, end->next = {}";
-        throw std::logic_error(fmt::format(msg, n, this->back().next));
+        throw std::logic_error(std::format(msg, n, this->back().next));
     }
 
     return cur;
@@ -505,7 +505,7 @@ noexcept (false) {
             } else {
                 const auto msg = "tapeimage: unexpected EOF when reading record "
                                 "- got {} bytes, expected there to be {} more";
-                throw unexpected_eof(fmt::format(msg, n, this->current.bytes_left()));
+                throw unexpected_eof(std::format(msg, n, this->current.bytes_left()));
             }
         }
 
@@ -602,7 +602,7 @@ bool tapeimage::read_header_from_disk() noexcept (false) {
             else {
                 const auto msg = "tapeimage: unexpected EOF when reading header "
                                   "- got {} bytes";
-                throw unexpected_eof(fmt::format(msg, n));
+                throw unexpected_eof(std::format(msg, n));
             }
         }
         default:
@@ -662,7 +662,7 @@ bool tapeimage::read_header_from_disk() noexcept (false) {
             const auto msg = "file corrupt: header type is not 0 or 1, "
                              "head.next (= {}) <= head.prev (= {}). "
                              "File might be missing data";
-            throw protocol_fatal(fmt::format(msg, head.next, head.prev));
+            throw protocol_fatal(std::format(msg, head.next, head.prev));
         } else {
             if (head.type == tapeimage::record and
                 head.next == 0 and
@@ -670,11 +670,11 @@ bool tapeimage::read_header_from_disk() noexcept (false) {
                 const auto msg =
                     "file corrupt: head.type == head.next == head.prev == 0. "
                     "File might be padded.";
-                throw protocol_fatal(fmt::format(msg, head.next, head.prev));
+                throw protocol_fatal(std::format(msg, head.next, head.prev));
             } else {
                 const auto msg = "file corrupt: head.next (= {}) <= head.prev "
                                  "(= {}). File size might be > 4GB";
-                throw protocol_fatal(fmt::format(msg, head.next, head.prev));
+                throw protocol_fatal(std::format(msg, head.next, head.prev));
             }
         }
     }
@@ -697,13 +697,13 @@ bool tapeimage::read_header_from_disk() noexcept (false) {
                              "prev(prev(head)).next (= {}). {}";
             if (this->recovery) {
                 throw protocol_failed_recovery(
-                    fmt::format(msg, head.prev, back2.next,
+                    std::format(msg, head.prev, back2.next,
                                 "Error happened in recovery mode. File might "
                                 "be missing data"));
             }
             this->recovery = LFP_PROTOCOL_TRYRECOVERY;
             this->errmsg(
-                fmt::format(msg, head.prev, back2.next,
+                std::format(msg, head.prev, back2.next,
                             "Assigning expected .next value to .prev"));
             head.prev = back2.next;
         }
@@ -720,7 +720,7 @@ bool tapeimage::read_header_from_disk() noexcept (false) {
             const auto msg = "file corrupt: second header prev (= {}) must be "
                              "pointing to zero (= {}). Error happened in "
                              "recovery mode. File might be missing data";
-            throw protocol_failed_recovery(fmt::format(
+            throw protocol_failed_recovery(std::format(
                   msg, head.prev, this->addr.physical_zero()));
         }
     }

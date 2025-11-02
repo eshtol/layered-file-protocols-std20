@@ -1,3 +1,10 @@
+### std20 fork description:
+C++20's \<format> used instead of fmtlib, making this fork free of additional dependencies.
+
+<br>
+
+### Original equinor/layered-file-protocols description:
+
 Layered file protocols
 ======================
 <p align="center">

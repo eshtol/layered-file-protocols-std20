@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <fmt/format.h>
+#include <format>
 
 #include <lfp/lfp.h>
 #include <lfp/protocol.hpp>
@@ -28,7 +28,7 @@ int lfp_readinto(lfp_protocol* f,
     assert(f);
 
     if (len < 0) {
-        f->errmsg(fmt::format("expected len (which is {}) >= 0", len));
+        f->errmsg(std::format("expected len (which is {}) >= 0", len));
         return LFP_INVALID_ARGS;
     }
 
@@ -49,7 +49,7 @@ int lfp_seek(lfp_protocol* f, std::int64_t n) try {
     assert(f);
 
     if (n < 0) {
-        f->errmsg(fmt::format("seek offset n < 0. Must be >= 0, was {}", n));
+        f->errmsg(std::format("seek offset n < 0. Must be >= 0, was {}", n));
         return LFP_INVALID_ARGS;
     }
 

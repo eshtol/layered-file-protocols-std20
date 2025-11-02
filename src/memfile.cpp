@@ -3,7 +3,7 @@
 #include <cassert>
 #include <vector>
 
-#include <fmt/format.h>
+#include <format>
 
 #include <lfp/protocol.hpp>
 #include <lfp/memfile.h>
@@ -77,7 +77,7 @@ void memfile::seek(std::int64_t n) noexcept (false) {
     assert(n >= 0);
     if (std::size_t(n) >= this->mem.size()) {
         const auto msg = "memfile: seek: offset (= {}) >= file size (= {})";
-        throw invalid_args(fmt::format(msg, n, this->mem.size()));
+        throw invalid_args(std::format(msg, n, this->mem.size()));
     }
 
     this->pos = n;

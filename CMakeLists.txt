@@ -6,13 +6,7 @@ include(CTest)
 include(GNUInstallDirs)
 include(TestBigEndian)
 
-find_package(fmt REQUIRED)
 
-option(
-    LFP_FMT_HEADER_ONLY
-    "Use fmtlib in header-only mode"
-    FALSE
-)
 option(
     BUILD_DOC
     "Build documentation"
@@ -24,20 +18,8 @@ option(
     FALSE
 )
 
-# fmtlib is an imported target, but not marked global, so an ALIAS library
-# can't be created, which would be nicer. Fall back to string-resolving the
-# namespaced library
-if (LFP_FMT_HEADER_ONLY)
-    set(fmtlib-comp-def $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_COMPILE_DEFINITIONS>)
-    set(fmtlib-incl-dir $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
-    set(fmtlib)
-else ()
-    set(fmtlib-comp-def)
-    set(fmtlib-incl-dir)
-    set(fmtlib fmt::fmt)
-endif ()
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 99)
 test_big_endian(LFP_BIG_ENDIAN)
 if (LFP_BIG_ENDIAN)
@@ -78,14 +60,10 @@ add_library(lfp
 )
 add_library(lfp::lfp ALIAS lfp)
 
-target_link_libraries(lfp PUBLIC ${fmtlib})
-
 target_include_directories(lfp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
-    PRIVATE
-        ${fmtlib-incl-dir}
 )
 
 target_compile_options(lfp
@@ -106,7 +84,6 @@ target_compile_definitions(lfp
         $<$<BOOL:${HAVE_FSEEKI64}>:HAVE_FSEEKI64>
         $<$<BOOL:${HAVE_FTELLO}>:HAVE_FTELLO>
         $<$<BOOL:${HAVE_FSEEKO}>:HAVE_FSEEKO>
-        ${fmtlib-comp-def}
 )
 
 install(
